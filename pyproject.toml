@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gamedriver"
+version = "0.0.1"
+authors = [
+  { name="Anderson Entwistle" },
+]
+description = "Automate android games built on game engines other than Unity"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/aentwist/gamedriver"
+Issues = "https://github.com/aentwist/gamedriver/issues"
+
+[tool.pip-tools]
+src_files = ["requirements.in", "dev-requirements.in"]
+# See https://github.com/jazzband/pip-tools/issues/2093
+# output_file = "requirements-lock.txt"
+output_file = "requirements.txt"
+
+[tool.usort.known]
+first_party = ["gamedriver"]

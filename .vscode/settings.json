@@ -1,0 +1,9 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+
+  "[python]": {
+    "editor.defaultFormatter": "omnilib.ufmt",
+    "editor.formatOnSave": true
+  }
+}
