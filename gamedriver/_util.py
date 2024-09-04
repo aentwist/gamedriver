@@ -10,7 +10,7 @@ def tap_xy(x: int, y: int) -> None:
     settings["tap_xy"](x, y)
 
 
-def swipe(x1: int, y1: int, x2: int, y2: int, duration_ms: int = None) -> None:
+def swipe(x1: int, y1: int, x2: int, y2: int, duration_ms=100) -> None:
     settings["swipe"](x1, y1, x2, y2, duration_ms)
 
 
@@ -23,8 +23,11 @@ def wait(seconds=1.0) -> None:
     time.sleep(settings["wait_scale"] * seconds + settings["wait_offset"])
 
 
-def get_screen(*, grayscale: bool = None) -> cv.typing.MatLike:
-    settings["get_screen"](grayscale)
+def get_screen(*, grayscale=False) -> cv.typing.MatLike:
+    screen = settings["get_screen"]()
+    if grayscale:
+        screen = cv.cvtColor(screen, cv.COLOR_BGR2GRAY)
+    return screen
 
 
 def get_pixel(x: int, y: int) -> tuple[int, int, int]:

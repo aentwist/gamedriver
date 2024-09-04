@@ -33,6 +33,7 @@ def wait_until_img_visible(
     """
     polling_interval_s = settings["refresh_rate_ms"] / 1_000
 
+    box = None
     for i in range(math.floor(timeout_s / polling_interval_s)):
         box = locate(
             img,

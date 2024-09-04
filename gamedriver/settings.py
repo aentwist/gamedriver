@@ -11,7 +11,7 @@ class Settings(TypedDict):
     img_path: str
     img_ext: str
 
-    get_screen: Callable[[Optional[bool]], cv.typing.MatLike]
+    get_screen: Callable[[], cv.typing.MatLike]
     refresh_rate_ms: int
 
     tap_xy: Callable[[int, int], None]
@@ -30,8 +30,8 @@ default_settings: Settings = {
     "img_ext": ".png",
     "get_screen": lambda: _raise_default_setting_err("get_screen"),
     "refresh_rate_ms": 1_000,
-    "tap_xy": lambda: _raise_default_setting_err("tap_xy"),
-    "swipe": lambda: _raise_default_setting_err("swipe"),
+    "tap_xy": lambda *args: _raise_default_setting_err("tap_xy"),
+    "swipe": lambda *args: _raise_default_setting_err("swipe"),
 }
 
 
