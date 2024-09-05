@@ -4,8 +4,12 @@
 #
 #    pip-compile --output-file=requirements.txt
 #
+alabaster==1.0.0
+    # via sphinx
 attrs==24.2.0
     # via usort
+babel==2.16.0
+    # via sphinx
 black==24.8.0
     # via ufmt
 build==1.2.1
@@ -32,11 +36,15 @@ cryptography==43.0.0
 cycler==0.12.1
     # via matplotlib
 docutils==0.21.2
-    # via readme-renderer
+    # via
+    #   readme-renderer
+    #   sphinx
 fonttools==4.53.1
     # via matplotlib
 idna==3.8
     # via requests
+imagesize==1.4.1
+    # via sphinx
 importlib-metadata==8.4.0
     # via twine
 iniconfig==2.0.0
@@ -51,6 +59,8 @@ jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
+jinja2==3.1.4
+    # via sphinx
 keyring==25.3.0
     # via twine
 kiwisolver==1.4.6
@@ -61,6 +71,8 @@ libcst==1.4.0
     #   usort
 markdown-it-py==3.0.0
     # via rich
+markupsafe==2.1.5
+    # via jinja2
 matplotlib==3.9.2
     # via -r dev-requirements.in
 mdurl==0.1.2
@@ -92,6 +104,7 @@ packaging==24.1
     #   matplotlib
     #   pipdeptree
     #   pytest
+    #   sphinx
 pathspec==0.12.1
     # via
     #   black
@@ -114,6 +127,7 @@ pygments==2.18.0
     # via
     #   readme-renderer
     #   rich
+    #   sphinx
 pyparsing==3.1.4
     # via matplotlib
 pyproject-hooks==1.1.0
@@ -133,6 +147,7 @@ readme-renderer==44.0
 requests==2.32.3
     # via
     #   requests-toolbelt
+    #   sphinx
     #   twine
 requests-toolbelt==1.0.0
     # via twine
@@ -144,6 +159,22 @@ secretstorage==3.3.3
     # via keyring
 six==1.16.0
     # via python-dateutil
+snowballstemmer==2.2.0
+    # via sphinx
+sphinx==8.0.2
+    # via -r dev-requirements.in
+sphinxcontrib-applehelp==2.0.0
+    # via sphinx
+sphinxcontrib-devhelp==2.0.0
+    # via sphinx
+sphinxcontrib-htmlhelp==2.1.0
+    # via sphinx
+sphinxcontrib-jsmath==1.0.1
+    # via sphinx
+sphinxcontrib-qthelp==2.0.0
+    # via sphinx
+sphinxcontrib-serializinghtml==2.0.0
+    # via sphinx
 stdlibs==2024.5.15
     # via usort
 toml==0.10.2

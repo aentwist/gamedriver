@@ -3,5 +3,6 @@ matplotlib
 pipdeptree
 pip-tools
 pytest
+sphinx
 twine
 ufmt

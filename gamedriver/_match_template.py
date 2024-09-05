@@ -39,7 +39,7 @@ def _match_template(
 
     bb = bounding_box
     if bb:
-        image = image[bb.top : bb.bottom, bb.left : bb.right]
+        image = image[bb[1] : bb[3], bb[0] : bb[2]]
 
     # avoid semi-cryptic OpenCV error below if bad size
     if templ.shape[0] > image.shape[0] or templ.shape[1] > image.shape[1]:
@@ -67,8 +67,63 @@ def match_template(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
 ) -> Box | None:
+    """Gets the best match of a template in an image.
+
+    Args:
+        haystack (str | cv.typing.MatLike): Image or path to image to be
+            searched
+        needle (str | cv.typing.MatLike): Image or path to image to search for
+        bounding_box (Box, optional): Restricts the region of the haystack
+            image to be searched. Defaults to None (search entire haystack).
+        convert_to_grayscale (bool, optional): Whether color images should be
+            converted to grayscale before matching, which improves performance
+            at the expense of accuracy. Is fine in most cases. Defaults to True.
+        is_grayscale (bool, optional): Whether the images are already grayscale.
+            Defaults to False.
+        method (int, optional): OpenCV match method. See `cv.match_template`.
+            Defaults to `cv.TM_SQDIFF_NORMED`.
+        threshold (float, optional): Threshold value specifying how good
+            potential matches must be to be considered matches. See
+            thresholding in OpenCV template matching. Defaults to 0.05 for
+            sum of square differences (SSD) OpenCV match methods
+            (e.g. `cv.TM_SQDIFF_NORMED`) and 0.8 for all others.
+
+    Returns:
+        Box | None: The best match, or None if no matches were good enough.
+
+    Examples:
+        Get the best match::
+
+            box = gd.match_template("haystack.png", "needle.png")
+
+        Match with stricter accuracy by using color matching and tightening
+        the threshold value (SSD match method => closer to 0 is stricter)::
+
+            box = gd.match_template(
+                "haystack.png",
+                "needle.png",
+                convert_to_grayscale=False,
+                threshold=0.01,
+            )
+
+        If the images are already grayscale::
+
+            box = gd.match_template(
+                "haystack-gray.png",
+                "needle-gray.png",
+                is_grayscale=True,
+            )
+
+        Get the best match in a specific region::
+
+            box = gd.match_template(
+                "haystack.png",
+                "needle.png",
+                bounding_box=gd.Box(left=0, top=0, right=540, bottom=960),
+            )
+    """
     res, _, templ_shape = _match_template(
         haystack,
         needle,
@@ -112,8 +167,29 @@ def match_template_all(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
 ) -> Iterator[Box]:
+    """Matches all instances of a template in an image.
+
+    See :py:func:`match_template`.
+
+    Yields:
+        Iterator[Box]: Matches
+
+    Examples:
+        Get a list of matches::
+
+            boxes = list(
+                gd.match_template_all("friends.png", gd.get_img_path("buttons/add"))
+            )
+
+        Tap each match::
+
+            for box in gd.match_template_all(
+                "friends.png", gd.get_img_path("buttons/add")
+            ):
+                gd.tap_box(box)
+    """
     res, image_shape, templ_shape = _match_template(
         haystack,
         needle,

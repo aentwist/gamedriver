@@ -16,20 +16,21 @@ def wait_until_img_visible(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
     timeout_s=30,
-):
-    """Waits until an image is visible
+) -> Box | None:
+    """Waits until an image is visible.
 
-    Polls to check whether the image is visible every 0.1s.
+    Polls to check whether the image is visible every
+    :py:attr:`settings.Settings.refresh_rate_ms` milliseconds.
+
+    See :py:func:`gamedriver.locate`.
 
     Args:
-        image (str): image name
-        region (tuple, optional): See `pyscreeze.locate`. Defaults to (0, 0, RESOLUTION[0], RESOLUTION[1]).
-        timeout_s (int, optional): timeout in seconds. Defaults to 30.
+        timeout_s (int, optional): Timeout in seconds. Defaults to 30.
 
     Returns:
-        None | Box
+        Box | None: The match, or None if there is no match within `timeout_s`.
     """
     polling_interval_s = settings["refresh_rate_ms"] / 1_000
 
@@ -60,8 +61,12 @@ def tap_img(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
-):
+    threshold: float = None,
+) -> Box | None:
+    """Taps the center of an image if found.
+
+    See :py:func:`gamedriver.locate`.
+    """
     box = locate(
         img,
         bounding_box=bounding_box,
@@ -76,7 +81,7 @@ def tap_img(
         )
     else:
         tap_box(box)
-    return bool(box)
+    return box
 
 
 # Makes us seem a little more human, if you're into that ;) (at the expense of speed)
@@ -87,10 +92,19 @@ def tap_img_when_visible_after_wait(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
     timeout_s=30,
     seconds=1,
-):
+) -> Box | None:
+    """Waits until an image is visible, waits for a time, then taps it.
+
+    See :py:func:`gamedriver.locate` and
+    :py:func:`gamedriver.wait_until_img_visible`.
+
+    Args:
+        seconds (int, optional): Time to wait after the image becomes visible
+            before tapping it. Defaults to 1.
+    """
     box = wait_until_img_visible(
         img,
         bounding_box=bounding_box,
@@ -103,7 +117,7 @@ def tap_img_when_visible_after_wait(
     if box:
         wait(seconds)
         tap_box(box)
-    return bool(box)
+    return box
 
 
 def tap_img_when_visible(
@@ -113,9 +127,14 @@ def tap_img_when_visible(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
     timeout_s=30,
-) -> bool:
+) -> Box | None:
+    """Waits until an image is visible, then taps the center of it.
+
+    See :py:func:`gamedriver.locate` and
+    :py:func:`gamedriver.wait_until_img_visible`.
+    """
     return tap_img_when_visible_after_wait(
         img,
         bounding_box=bounding_box,
@@ -137,10 +156,26 @@ def tap_img_while_other_visible(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
     timeout_s=5,
     frequency_s=1,
-):
+) -> bool:
+    """Taps an image while another is visible.
+
+    See :py:func:`gamedriver.locate` and
+    :py:func:`gamedriver.wait_until_img_visible`.
+
+    Args:
+        img (str): Image to tap
+        other (str): Image to check the visibility of
+        frequency_s (int, optional): How often the image to tap should be
+            tapped, in seconds. Defaults to 1.
+
+    Returns:
+        bool: True if the image to check disappeared within the timeout and
+            tapping was stopped, or False if the image to check remained after
+            the timeout and tapping was continued until the end.
+    """
     tap_count = math.floor(timeout_s / frequency_s)
     for _ in range(tap_count):
         if not locate(
@@ -178,10 +213,17 @@ def tap_img_while_visible(
     convert_to_grayscale=True,
     is_grayscale=False,
     method=cv.TM_SQDIFF_NORMED,
-    threshold=None,
+    threshold: float = None,
     timeout_s=5,
     frequency_s=1,
-):
+) -> bool:
+    """Taps an image while it is visible.
+
+    See :py:func:`tap_img_while_other_visible`.
+
+    Args:
+        img (str): Image to check the visibility of and tap
+    """
     # Touching an image while it is visible is a special case of taping it
     # while an arbitrary image is visible
     return tap_img_while_other_visible(

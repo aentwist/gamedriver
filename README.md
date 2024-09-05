@@ -1,6 +1,6 @@
 # GameDriver
 
-Automate android games built on game engines other than Unity
+Automate games in Python using template matching
 
 ## Install
 
@@ -17,7 +17,7 @@ import time
 import gamedriver as gd
 from gamedriver.settings import set_settings as set_gd_settings
 
-# For example, we will use an adb client to provide the tap_xy and swipe
+# For example (Android), we will use an adb client to provide the tap_xy and swipe
 # functionality, and a scrcpy client to provide the image of the device screen.
 import adbutils  # https://github.com/openatx/adbutils
 import scrcpy  # https://github.com/leng-yue/py-scrcpy-client
@@ -27,7 +27,7 @@ import scrcpy  # https://github.com/leng-yue/py-scrcpy-client
 from my_project import SRC_DIR
 
 
-# Boilerplate for however you are providing adb tap + swipe, and get device
+# Boilerplate for however you are providing tap/swipe, and get device
 # screen functionality
 
 # For example, the adb device is available on the standard port, 5555
@@ -93,9 +93,11 @@ add_btns = list(gd.locate_all("buttons/add"))
 if len(add_btns) > 3:
     gd.tap_box(add_btns[3])
 
-# By default matching is in grayscale. However sometimes there is a need for
-# color matching. For example, if the same button has different colors.
-if not gd.touch_img_when_visible(
+# Matching is in grayscale by default, however sometimes there is a need for
+# color matching. For example, if the same button has different colors. While
+# that is the core use case, color matching also improves accuracy - a
+# reasonable alternative to fine-tuning the threshold strictness (see below).
+if not gd.tap_img_when_visible(
     # Wait until the button changes from disabled (gray) to enabled (blue).
     # Use a lower timeout in case this might not occur; then if it doesn't
     # we won't be waiting too long.
@@ -109,7 +111,7 @@ if not gd.touch_img_when_visible(
 #
 # The cancel button is not matching even though it is present. Loosen (raise)
 # the threshold value since the match is of lower quality.
-gd.touch_img_when_visible("buttons/cancel", threshold=0.1)
+gd.tap_img_when_visible("buttons/cancel", threshold=0.1)
 
 # Not recommended, but you can alternatively use a more implicit style.
 #
@@ -131,7 +133,7 @@ gd.tap_xy(100, 100)
 
 ### Why only games, and why not Unity?
 
-This can be used to automate other things, but using image matching for automation (this) should be an absolute last resort. For other use cases see [Appium](https://github.com/appium/appium), and in the Unity case the [Appium AltUnity plugin](https://github.com/headspinio/appium-altunity-plugin).
+This can be used to automate other things, but using computer vision for automation (this) should be an absolute last resort. For other use cases see [Appium](https://github.com/appium/appium), and in the Unity case the [Appium AltUnity plugin](https://github.com/headspinio/appium-altunity-plugin).
 
 ### Other PLs/platforms/_I need more_?
 
