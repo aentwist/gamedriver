@@ -4,5 +4,6 @@ pipdeptree
 pip-tools
 pytest
 sphinx
+sphinxcontrib-fulltoc
 twine
 ufmt
