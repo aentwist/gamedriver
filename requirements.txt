@@ -94,8 +94,8 @@ numpy==2.1.0
     #   -r requirements.in
     #   contourpy
     #   matplotlib
-    #   opencv-python
-opencv-python==4.10.0.84
+    #   opencv-python-headless
+opencv-python-headless==4.10.0.84
     # via -r requirements.in
 packaging==24.1
     # via

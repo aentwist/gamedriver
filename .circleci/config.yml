@@ -1,0 +1,66 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@4.1.0
+
+jobs:
+  test:
+    docker:
+      - image: python:3.12.5-bookworm # heavy image for curl (codecov)
+    resource_class: small
+    environment:
+      PIP_CACHE_DIR: .pip
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gamedriver-pip-{{ checksum "requirements.txt" }}
+      - run: pip install -r requirements.txt
+      - save_cache:
+          key: gamedriver-pip-{{ checksum "requirements.txt" }}
+          paths:
+            - .pip
+      - run: coverage run --source=gamedriver/ -m pytest
+      - codecov/upload
+
+  release:
+    docker:
+      - image: node:22.8.0-bookworm # heavy image for git (semantic-release)
+    resource_class: small
+    environment:
+      npm_config_cache: .npm
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # Keep versions in a lockfile instead of inline here because it
+            # is way easier to use a file checksum to control the cache.
+            # As an added bonus, version pinning is way stricter.
+            - gamedriver-npm-{{ checksum "package-lock.json" }}
+      - run: npm ci
+      - save_cache:
+          key: gamedriver-npm-{{ checksum "package-lock.json" }}
+          paths:
+            - .npm
+      - run: npx semantic-release
+
+workflows:
+  check:
+    when:
+      # not:
+      equal:
+        - << pipeline.git.branch >>
+        - main
+    jobs:
+      - test
+  release:
+    when:
+      not: #####
+        equal:
+          - << pipeline.git.branch >>
+          - main
+    jobs:
+      - test
+      - release:
+          requires:
+            - test

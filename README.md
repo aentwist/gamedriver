@@ -1,6 +1,19 @@
-# GameDriver
-
-Automate games in Python using template matching
+<h1 align="center">🕹️ GameDriver 🏎️💨</h1>
+<h3 align="center">Automate games in Python using template matching</h3>
+<p align="center">
+  <a href="https://codecov.io/github/aentwist/gamedriver">
+    <img alt="codecov" src="https://codecov.io/github/aentwist/gamedriver/graph/badge.svg?token=KJJ8Q1HRMV">
+  </a>
+  <a href="https://dl.circleci.com/status-badge/redirect/gh/aentwist/gamedriver/tree/main">
+    <img alt="CircleCI" src="https://dl.circleci.com/status-badge/img/gh/aentwist/gamedriver/tree/main.svg?style=shield">
+  </a>
+  <a href="https://www.npmjs.com/package/gamedriver">
+    <img alt="npm latest version" src="https://img.shields.io/npm/v/gamedriver/latest.svg">
+  </a>
+  <a href="https://www.conventionalcommits.org">
+    <img alt="semantic-release: conventionalcommits" src="https://img.shields.io/badge/semantic--release-conventionalcommits-fa6673?logo=semantic-release">
+  </a>
+</p>
 
 ## Install
 
@@ -68,7 +81,7 @@ set_gd_settings(
 )
 ```
 
-For the full settings reference, see [settings.py](gamedriver/settings.py).
+For the full settings reference, see the [API documentation](#api-documentation).
 
 ## Usage
 
@@ -127,7 +140,7 @@ gd.tap_xy(100, 100)
 
 ## API Documentation
 
-// TODO
+https://gamedriver.readthedocs.io
 
 ## FAQ
 

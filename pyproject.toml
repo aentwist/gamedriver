@@ -4,7 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gamedriver"
-version = "0.0.1"
+# See https://semantic-release.gitbook.io/semantic-release/support/faq#why-is-the-package.jsons-version-not-updated-in-my-repository
+version = "0.0.0"
 authors = [
   { name="Anderson Entwistle" },
 ]
@@ -23,8 +24,6 @@ Issues = "https://github.com/aentwist/gamedriver/issues"
 
 [tool.pip-tools]
 src_files = ["requirements.in", "dev-requirements.in"]
-# See https://github.com/jazzband/pip-tools/issues/2093
-# output_file = "requirements-lock.txt"
 output_file = "requirements.txt"
 
 [tool.usort.known]
