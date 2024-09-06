@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "conventional-changelog-conventionalcommits": "^8.0.0",
     "semantic-release": "^24.1.0",
     "semantic-release-pypi": "^3.0.2"
   }
