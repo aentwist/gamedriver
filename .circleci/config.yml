@@ -25,7 +25,8 @@ jobs:
 
   release:
     docker:
-      - image: node:22.8.0-bookworm # heavy image for git (semantic-release)
+      # While node bookworm has python, it is of course just the system version
+      - image: nikolaik/python-nodejs:python3.12-nodejs22
     resource_class: small
     environment:
       npm_config_cache: .npm
