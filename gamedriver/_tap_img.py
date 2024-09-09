@@ -1,4 +1,6 @@
 import math
+import time
+import timeit
 
 import cv2 as cv
 
@@ -32,11 +34,14 @@ def wait_until_img_visible(
     Returns:
         Box | None: The match, or None if there is no match within `timeout_s`.
     """
-    polling_interval_s = settings["refresh_rate_ms"] / 1_000
+    refresh_rate_s = settings["refresh_rate_ms"] / 1_000
     img_bgr = open_img(get_img_path(img)) if isinstance(img, str) else img
 
     box = None
-    for i in range(math.floor(timeout_s / polling_interval_s)):
+    t_start = timeit.default_timer()
+    t_end = t_start
+    while t_end - t_start < timeout_s:
+        # t_end is the end of last iteration, i.e. the start of this one
         box = locate(
             img_bgr,
             bounding_box=bounding_box,
@@ -46,9 +51,16 @@ def wait_until_img_visible(
             threshold=threshold,
         )
         if box:
-            logger.debug(f"{img} available after {i * polling_interval_s}s")
+            logger.debug(f"{img} available after {t_end - t_start}s")
             break
-        wait(polling_interval_s)
+
+        # Amount of time used so far this loop iteration
+        t_curr = timeit.default_timer() - t_end
+        # Time left to use this loop iteration
+        t_remain = refresh_rate_s - t_curr
+        if t_remain > 0:
+            time.sleep(t_remain)
+        t_end = timeit.default_timer()
     else:
         logger.debug(f"{img} not available after {timeout_s}s")
 

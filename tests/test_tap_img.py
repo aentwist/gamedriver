@@ -15,6 +15,18 @@ def locate_campaign_begin():
 
 
 @pytest.fixture
+def locate_campaign_begin_delayed():
+    with patch("gamedriver._tap_img.locate") as locate:
+        locate.side_effect = [
+            None,
+            None,
+            gd.Box(left=320, top=1602, right=760, bottom=1729),
+            None,
+        ]
+        yield locate
+
+
+@pytest.fixture
 def locate_not_found():
     with patch("gamedriver._tap_img.locate") as locate:
         locate.return_value = None
@@ -50,18 +62,19 @@ def fast_refresh_settings():
         yield settings
 
 
-def test_wait_until_img_visible(get_screen, get_img_path, fast_refresh_settings):
-    box = gd.wait_until_img_visible("dispatch-brown")
-    assert box
-    assert get_screen.call_count == 3
+def test_wait_until_img_visible(
+    locate_campaign_begin_delayed, get_img_path, fast_refresh_settings
+):
+    assert gd.wait_until_img_visible("dispatch-brown")
+    assert locate_campaign_begin_delayed.call_count == 3
 
 
 def test_wait_until_img_visible_timeout(
-    get_screen, get_img_path, fast_refresh_settings
+    locate_campaign_begin_delayed, get_img_path, fast_refresh_settings
 ):
     # Refresh rate of 1ms. 2ms / 1ms = 2 calls to get_screen. No match
-    box = gd.wait_until_img_visible("dispatch-brown", timeout_s=0.002)
-    assert not box
+    assert not gd.wait_until_img_visible("dispatch-brown", timeout_s=0.002)
+    assert locate_campaign_begin_delayed.call_count == 2
 
 
 @pytest.fixture
