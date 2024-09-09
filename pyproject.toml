@@ -11,20 +11,51 @@ authors = [
 ]
 description = "Automate games in Python using template matching"
 readme = "README.md"
-requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
+]
+# Note that Python does not follow semver. Restrict them to v3 anyway. As for
+# the minimum version, just choose the lowest version not yet end-of-life. Even
+# if we support lower, there is no reason to expose ourselves to unreasonable
+# potential maintenance burden.
+requires-python = "~= 3.9"
+dependencies = [
+  "numpy ~= 2.0",
+  "python-json-logger ~= 2.0",
+]
+
+[project.optional-dependencies]
+# All is for us, so use headless OpenCV.
+all = ["gamedriver[opencv-python-headless,dev]"]
+# These are for users (not optional) - restrict them. Also, they should match.
+# See https://stackoverflow.com/questions/78960966/is-there-a-way-to-specify-default-dependencies-or-dependencies-installed-only-i
+opencv-python = ["opencv-python ~= 4.0"]
+opencv-python-headless = ["opencv-python-headless ~= 4.0"]
+# These are pinned for us in requirements.txt - no need to restrict them here.
+dev = [
+  "build",
+  "coverage",
+  "matplotlib",
+  "pipdeptree",
+  "pip-tools",
+  "pytest",
+  "sphinx",
+  "sphinxcontrib-fulltoc",
+  "twine",
+  "ufmt",
+  "validate-pyproject[all]"
 ]
 
 [project.urls]
 Homepage = "https://github.com/aentwist/gamedriver"
 Issues = "https://github.com/aentwist/gamedriver/issues"
 
-[tool.pip-tools]
-src_files = ["requirements.in", "dev-requirements.in"]
-output_file = "requirements.txt"
+[tool.hatch.build.targets.sdist]
+include = [
+  "gamedriver",
+]
 
 [tool.usort.known]
 first_party = ["gamedriver"]

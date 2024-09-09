@@ -1,4 +1,0 @@
-[build.targets.sdist]
-include = [
-  "gamedriver",
-]

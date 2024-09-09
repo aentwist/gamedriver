@@ -20,8 +20,14 @@
 
 ## Install
 
+This project uses OpenCV. If your project also uses it and [needs opencv-python](https://github.com/opencv/opencv-python?tab=readme-ov-file#installation-and-usage), take that. Otherwise, take opencv-python-headless. Taking exactly one of the two is required.
+
 ```sh
-pip install gamedriver
+pip install gamedriver[opencv-python-headless]
+```
+
+```sh
+pip install gamedriver[opencv-python]
 ```
 
 ## Setup
