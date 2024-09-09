@@ -9,7 +9,7 @@ version = "0.0.0"
 authors = [
   { name="Anderson Entwistle" },
 ]
-description = "Automate games in Python using template matching"
+description = "Lightweight cross-platform image matching tools focused on automation"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",

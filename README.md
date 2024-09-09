@@ -1,5 +1,5 @@
 <h1 align="center">🕹️ GameDriver 🏎️💨</h1>
-<h3 align="center">Automate games in Python using template matching</h3>
+<h3 align="center">Lightweight cross-platform image matching tools focused on automation</h3>
 <p align="center">
   <a href="https://gamedriver.readthedocs.io/en/latest/?badge=latest">
       <img alt="Documentation status" src="https://readthedocs.org/projects/gamedriver/badge/?version=latest">
