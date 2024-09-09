@@ -11,6 +11,17 @@ authors = [
 ]
 description = "Lightweight cross-platform image matching tools focused on automation"
 readme = "README.md"
+keywords = [
+  "image matching",
+  "template matching",
+  "image detection",
+  "opencv",
+  "computer vision",
+  "automation",
+  "testing",
+  "game",
+  "simulation",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
