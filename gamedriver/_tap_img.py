@@ -4,13 +4,13 @@ import cv2 as cv
 
 from gamedriver._geometry import Box, tap_box
 from gamedriver._locate import locate
-from gamedriver._util import wait
+from gamedriver._util import get_img_path, open_img, wait
 from gamedriver.logger import logger
 from gamedriver.settings import settings
 
 
 def wait_until_img_visible(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -33,11 +33,12 @@ def wait_until_img_visible(
         Box | None: The match, or None if there is no match within `timeout_s`.
     """
     polling_interval_s = settings["refresh_rate_ms"] / 1_000
+    img_bgr = open_img(get_img_path(img)) if isinstance(img, str) else img
 
     box = None
     for i in range(math.floor(timeout_s / polling_interval_s)):
         box = locate(
-            img,
+            img_bgr,
             bounding_box=bounding_box,
             convert_to_grayscale=convert_to_grayscale,
             is_grayscale=is_grayscale,
@@ -55,7 +56,7 @@ def wait_until_img_visible(
 
 
 def tap_img(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -86,7 +87,7 @@ def tap_img(
 
 # Makes us seem a little more human, if you're into that ;) (at the expense of speed)
 def tap_img_when_visible_after_wait(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -121,7 +122,7 @@ def tap_img_when_visible_after_wait(
 
 
 def tap_img_when_visible(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -148,8 +149,8 @@ def tap_img_when_visible(
 
 
 def tap_img_while_other_visible(
-    img: str,
-    other: str,
+    img: str | cv.typing.MatLike,
+    other: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     other_bounding_box: Box = None,
@@ -166,8 +167,8 @@ def tap_img_while_other_visible(
     :py:func:`gamedriver.wait_until_img_visible`.
 
     Args:
-        img (str): Image to tap
-        other (str): Image to check the visibility of
+        img (str | cv.typing.MatLike): Image to tap
+        other (str | cv.typing.MatLike): Image to check the visibility of
         frequency_s (int, optional): How often the image to tap should be
             tapped, in seconds. Defaults to 1.
 
@@ -176,10 +177,13 @@ def tap_img_while_other_visible(
             tapping was stopped, or False if the image to check remained after
             the timeout and tapping was continued until the end.
     """
+    img_bgr = open_img(get_img_path(img)) if isinstance(img, str) else img
+    other_bgr = open_img(get_img_path(other)) if isinstance(other, str) else other
+
     tap_count = math.floor(timeout_s / frequency_s)
     for _ in range(tap_count):
         if not locate(
-            other,
+            other_bgr,
             bounding_box=other_bounding_box,
             convert_to_grayscale=convert_to_grayscale,
             is_grayscale=is_grayscale,
@@ -188,7 +192,7 @@ def tap_img_while_other_visible(
         ):
             break
         tap_img(
-            img,
+            img_bgr,
             bounding_box=bounding_box,
             convert_to_grayscale=convert_to_grayscale,
             is_grayscale=is_grayscale,
@@ -207,7 +211,7 @@ def tap_img_while_other_visible(
 
 
 def tap_img_while_visible(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -222,7 +226,7 @@ def tap_img_while_visible(
     See :py:func:`tap_img_while_other_visible`.
 
     Args:
-        img (str): Image to check the visibility of and tap
+        img (str | cv.typing.MatLike): Image to check the visibility of and tap
     """
     # Touching an image while it is visible is a special case of taping it
     # while an arbitrary image is visible

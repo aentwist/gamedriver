@@ -8,7 +8,7 @@ from gamedriver._util import get_img_path, get_screen
 
 
 def locate(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -27,7 +27,8 @@ def locate(
     :py:func:`gamedriver.get_img_path`.
 
     Args:
-        img (str): Relative path to the needle image, with no file extension
+        img (str | cv.typing.MatLike): Image or relative path to the image to
+            search for with no file extension
 
     Returns:
         Box | None
@@ -37,12 +38,9 @@ def locate(
 
             box = gd.locate("buttons/confirm")
     """
-    screen = (
-        get_screen(grayscale=is_grayscale) if is_grayscale is not None else get_screen()
-    )
     return match_template(
-        screen,
-        get_img_path(img),
+        get_screen(grayscale=is_grayscale),
+        get_img_path(img) if isinstance(img, str) else img,
         bounding_box=bounding_box,
         convert_to_grayscale=convert_to_grayscale,
         is_grayscale=is_grayscale,
@@ -52,7 +50,7 @@ def locate(
 
 
 def locate_all(
-    img: str,
+    img: str | cv.typing.MatLike,
     *,
     bounding_box: Box = None,
     convert_to_grayscale=True,
@@ -69,12 +67,9 @@ def locate_all(
     Yields:
         Iterator[Box]
     """
-    screen = (
-        get_screen(grayscale=is_grayscale) if is_grayscale is not None else get_screen()
-    )
     return match_template_all(
-        screen,
-        get_img_path(img),
+        get_screen(grayscale=is_grayscale),
+        get_img_path(img) if isinstance(img, str) else img,
         bounding_box=bounding_box,
         convert_to_grayscale=convert_to_grayscale,
         is_grayscale=is_grayscale,

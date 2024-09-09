@@ -1,10 +1,24 @@
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import cv2 as cv
 import pytest
 
 import gamedriver as gd
 from tests.util import get_test_ss_path as ss, get_test_templ_path as templ
+
+
+@pytest.fixture
+def locate_campaign_begin():
+    with patch("gamedriver._tap_img.locate") as locate:
+        locate.return_value = gd.Box(left=320, top=1602, right=760, bottom=1729)
+        yield locate
+
+
+@pytest.fixture
+def locate_not_found():
+    with patch("gamedriver._tap_img.locate") as locate:
+        locate.return_value = None
+        yield locate
 
 
 # TODO: Some of this goes into locate and should be split out. locate itself
@@ -24,7 +38,7 @@ def get_screen():
 
 @pytest.fixture
 def get_img_path():
-    with patch("gamedriver._locate.get_img_path") as get_img_path:
+    with patch("gamedriver._tap_img.get_img_path") as get_img_path:
         get_img_path.side_effect = templ
         yield get_img_path
 
@@ -56,12 +70,16 @@ def tap_box():
         yield tap_box
 
 
-def test_tap_img(get_screen, get_img_path, tap_box):
+def test_tap_img(locate_campaign_begin, tap_box):
     assert gd.tap_img("begin")
+    locate_campaign_begin.assert_called_once()
+    tap_box.assert_called_once()
 
 
-def test_tap_img_not_found(get_screen, get_img_path, tap_box):
+def test_tap_img_not_found(locate_not_found, tap_box):
     assert not gd.tap_img("dispatch-brown")
+    locate_not_found.assert_called_once()
+    tap_box.assert_not_called()
 
 
 def test_tap_img_when_visible_after_wait(get_screen, get_img_path, tap_box):
