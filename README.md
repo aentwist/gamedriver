@@ -79,9 +79,10 @@ set_gd_settings(
         "img_path": os.path.join(SRC_DIR, "img"),
         "img_ext": ".png",
         "get_screen": lambda: scrcpy_client.last_frame,
-        # Since we are streaming the screen using scrcpy, we can choose a very
-        # high polling frequency. Screenshotting should use closer to 1+ seconds.
-        "refresh_rate_ms": 10,
+        # Since we are streaming the screen using scrcpy, we can choose a "high"
+        # polling frequency. Screenshotting should use closer to 1+ seconds.
+        # Increasing this fast enough simply becomes 'as fast as the CPU goes'.
+        "refresh_rate_ms": 100,
         "tap_xy": lambda x, y: adb_device.click(x, y),
         "swipe": lambda x1, y1, x2, y2, duration_ms: adb_device.swipe(
             x1, y1, x2, y2, duration_ms / 1_000
