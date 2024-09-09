@@ -1,3 +1,4 @@
+from gamedriver._error import ReadImageError
 from gamedriver._geometry import Box, get_center, Point, tap_box
 from gamedriver._locate import locate, locate_all
 from gamedriver._match_template import match_template, match_template_all
@@ -9,7 +10,15 @@ from gamedriver._tap_img import (
     tap_img_while_visible,
     wait_until_img_visible,
 )
-from gamedriver._util import get_img_path, get_pixel, get_screen, swipe, tap_xy, wait
+from gamedriver._util import (
+    get_img_path,
+    get_pixel,
+    get_screen,
+    open_img,
+    swipe,
+    tap_xy,
+    wait,
+)
 
 from gamedriver.logger import _setup_logging
 

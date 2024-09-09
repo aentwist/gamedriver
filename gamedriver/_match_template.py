@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 
 from gamedriver._geometry import Box
+from gamedriver._util import open_img
 
 
 def _match_template(
@@ -18,24 +19,16 @@ def _match_template(
     if is_grayscale:
         convert_to_grayscale = False
 
-    IMAGE_DNE_ERR_MSG = "Failed to read %s image %s, are you sure it exists?"
-
-    image = haystack
-    if isinstance(haystack, str):
-        image = (
-            cv.imread(haystack, cv.IMREAD_GRAYSCALE)
-            if is_grayscale
-            else cv.imread(haystack)
-        )
-        assert image is not None, IMAGE_DNE_ERR_MSG % ("haystack", haystack)
-    templ = needle
-    if isinstance(needle, str):
-        templ = (
-            cv.imread(needle, cv.IMREAD_GRAYSCALE)
-            if is_grayscale
-            else cv.imread(needle)
-        )
-        assert templ is not None, IMAGE_DNE_ERR_MSG % ("needle", needle)
+    image = (
+        open_img(haystack, is_grayscale=is_grayscale)
+        if isinstance(haystack, str)
+        else haystack
+    )
+    templ = (
+        open_img(needle, is_grayscale=is_grayscale)
+        if isinstance(needle, str)
+        else needle
+    )
 
     bb = bounding_box
     if bb:

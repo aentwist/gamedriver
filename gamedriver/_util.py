@@ -3,6 +3,7 @@ import time
 
 import cv2 as cv
 
+from gamedriver._error import ReadImageError
 from gamedriver.settings import settings
 
 
@@ -134,3 +135,23 @@ def get_img_path(rel_path: str) -> str:
     if not ext.startswith("."):
         ext = f".{ext}"
     return os.path.join(settings["img_path"], f"{rel_path}{ext}")
+
+
+def open_img(path: str, *, is_grayscale=False) -> cv.typing.MatLike:
+    """Opens an image.
+
+    Args:
+        path (str): Full path to the image
+        is_grayscale (bool, optional): Whether the image is already grayscale.
+            Defaults to False.
+
+    Returns:
+        cv.typing.MatLike: Image in the BGR color space
+
+    Raises:
+        :py:class:`gamedriver.ReadImageError`
+    """
+    image = cv.imread(path, cv.IMREAD_GRAYSCALE) if is_grayscale else cv.imread(path)
+    if image is None:
+        raise ReadImageError(path)
+    return image
